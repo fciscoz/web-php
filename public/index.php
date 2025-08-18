@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__.'/../framework/Database.php';
+require __DIR__.'/../framework/Validator.php';
 
 $db = new Database();
 
