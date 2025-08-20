@@ -24,6 +24,10 @@ class Router
         $this->routes['DELETE'][$uri] = $action;
     }
 
+    public function put(string $uri, array $action)
+    {
+        $this->routes['PUT'][$uri] = $action;
+    }
 
     public function run()
     {
