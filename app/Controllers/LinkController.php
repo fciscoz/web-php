@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Controllers;
+
+use Framework\Database;
+use Framework\Validator;
+
 class LinkController
 {
     public function index()
@@ -25,7 +30,7 @@ class LinkController
         $validator = new Validator($_POST, [
             'title'         => 'required|min:3|max:190',
             'url'           => 'required|url|max:190',
-            'description'   => 'required|min:3|max:500',
+            'description'   => 'required|min:10|max:500',
         ]);
 
         if ($validator->passes()) {
@@ -53,14 +58,14 @@ class LinkController
 
     public function edit()
     {
+        $title = 'Editar proyecto';
+
         $db = new Database();
 
         $link = $db->query('SELECT * FROM links WHERE id = :id', [
-            'id' => $_GET['id']
+            'id' => $_GET['id'] ?? null,
         ])->firstOrFail();
 
-
-        $title = 'Editar proyecto';
         require __DIR__ . '/../../resources/links-edit.template.php';
     }
 
@@ -69,36 +74,33 @@ class LinkController
         $validator = new Validator($_POST, [
             'title'         => 'required|min:3|max:190',
             'url'           => 'required|url|max:190',
-            'description'   => 'required|min:3|max:500',
+            'description'   => 'required|min:10|max:500',
         ]);
-        
+
         $db = new Database();
 
         $link = $db->query('SELECT * FROM links WHERE id = :id', [
-            'id' => $_GET['id']
+            'id' => $_GET['id'] ?? null,
         ])->firstOrFail();
 
-
         if ($validator->passes()) {
-
             $db->query(
                 'UPDATE links SET title = :title, url = :url, description = :description WHERE id = :id',
                 [
-                    'id'            => $_GET['id'],
+                    'id'            => $link['id'],
                     'title'         => $_POST['title'],
-                    'url'           =>  $_POST['url'],
+                    'url'           => $_POST['url'],
                     'description'   => $_POST['description'],
                 ]
             );
 
             header('Location: /links');
             exit;
-        } 
-        
+        }
+
         $errors = $validator->errors();
-
-
         $title = 'Editar proyecto';
+
         require __DIR__ . '/../../resources/links-edit.template.php';
     }
 
@@ -107,7 +109,7 @@ class LinkController
         $db = new Database();
 
         $db->query('DELETE FROM links WHERE id = :id', [
-            'id' => $_POST['id']
+            'id' => $_POST['id'] ?? null,
         ]);
 
         header('Location: /links');

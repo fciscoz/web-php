@@ -1,39 +1,42 @@
 <?php
 
-class Database{
-  
-  private $connection;
-  private $statement;
+namespace Framework;
 
-  public function __construct()
-  {
-  
-    $dns = 'mysql:host=localhost;dbname=web-php;charset=utf8mb4';
+use PDO;
 
-    $this->connection = new PDO($dns, 'root', '123456');
-  }
+class Database
+{
+    private $connection;
+    private $statement; // sentencia
 
-  public function query($sql, $params = [])
-  {
-    $this->statement = $this->connection->prepare($sql);
-    $this->statement->execute($params);
-    return $this;
-  }
+    public function __construct()
+    {
+        $dsn = 'mysql:host=127.0.0.1;dbname=web-php;charset=utf8mb4';
 
-  public function get()
-  {
-      return $this->statement->fetchAll(PDO::FETCH_ASSOC);
-  }
+        $this->connection = new PDO($dsn, 'root', '123456');
+    }
 
-  public function firstOrFail()
-  {
-      $result = $this->statement->fetch(PDO::FETCH_ASSOC);
-      if (!$result) {
-        //throw new Exception("No matching record found");
-        exit("No matching record found"); // or handle the error as needed 
-      }
-      return $result;
-  }
+    public function query($sql, $params = [])
+    {
+        $this->statement = $this->connection->prepare($sql);
+        $this->statement->execute($params);
+
+        return $this;
+    }
+
+    public function get()
+    {
+        return $this->statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function firstOrFail()
+    {
+        $result = $this->statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            exit('404 Not Found');
+        }
+
+        return $result;
+    }
 }
-
-?>

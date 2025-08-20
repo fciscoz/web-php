@@ -1,10 +1,13 @@
 <?php
 
+namespace App\Controllers;
+
 class AboutController
 {
     public function index()
     {
-        $title = 'About';
-        require __DIR__.'/../../resources/about.template.php';
+        $title = 'Sobre mí';
+
+        require __DIR__ . '/../../resources/about.template.php';
     }
 }

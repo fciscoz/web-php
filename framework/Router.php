@@ -1,5 +1,7 @@
 <?php
 
+namespace Framework;
+
 class Router
 {
     protected $routes = [];
@@ -33,13 +35,9 @@ class Router
     {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        $method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD']; // GET, POST
+        $method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD']; // GET, POST, DELETE, PUT
 
         $action = $this->routes[$method][$uri] ?? null;
-
-        // echo '<pre>';
-        // var_dump($this->routes);
-        // die();
 
         if (!$action) {
             exit('Route not found ' . $method . ' ' . $uri);
